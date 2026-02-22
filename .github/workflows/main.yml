@@ -32,6 +32,8 @@ jobs:
           git add Data/Test_Main.csv
           git commit -m "Auto-generate Test_Main.csv from workflow" || echo "No changes to commit"
           git push
+      - name : Triger the email 
+        run : python Email.py
         
        
 
