@@ -10,7 +10,7 @@ EMAIL_ADDRESS = "ghoshpicklu2@gmail.com"
 EMAIL_PASSWORD = "cjok miel xfyq lyei"
 TO_EMAIL = "Picklu.Ghosh2@cognizant.com" 
 
-FILE_PATH = "Test.csv"   # Make sure this file exists
+FILE_PATH = "Data\Test.csv"   # Make sure this file exists
 
 msg = MIMEMultipart()
 msg["From"] = EMAIL_ADDRESS
