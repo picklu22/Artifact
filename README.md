@@ -1,1 +1,1 @@
-# Artifact is the repo to practise github action to download csv in github and send over mail.
+Could you please give me diagram to convert IICS mapping to DBT code and once code is push then CICD pipline should run and return report
