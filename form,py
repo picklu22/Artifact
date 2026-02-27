@@ -1,42 +1,35 @@
 import streamlit as st
 import pandas as pd
 
-# ------------------ Page Config ------------------ #
+# ---------------- Page Config ---------------- #
 st.set_page_config(
     page_title="Excel to CSV Converter",
     page_icon="🌈",
     layout="centered"
 )
 
-# ------------------ Custom CSS ------------------ #
+# ---------------- Safe Custom CSS ---------------- #
 st.markdown("""
 <style>
 
-body {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+.block-container {
+    padding-top: 2rem;
 }
 
-.main-title {
-    font-size: 34px;
-    font-weight: 700;
+.title {
     text-align: center;
-    color: white;
-    margin-bottom: 20px;
-}
-
-.card {
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0px 10px 30px rgba(0,0,0,0.15);
+    font-size: 32px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ff512f, #dd2476);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .stButton>button {
     background: linear-gradient(90deg, #ff512f, #dd2476);
     color: white;
     border-radius: 10px;
-    height: 50px;
-    font-size: 16px;
+    height: 48px;
     font-weight: bold;
     border: none;
 }
@@ -45,8 +38,7 @@ body {
     background: linear-gradient(90deg, #00c6ff, #0072ff);
     color: white;
     border-radius: 10px;
-    height: 50px;
-    font-size: 16px;
+    height: 48px;
     font-weight: bold;
     border: none;
 }
@@ -54,50 +46,39 @@ body {
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🌈 Excel → CSV Converter</div>', unsafe_allow_html=True)
+st.markdown('<p class="title">🌈 Excel → CSV Converter</p>', unsafe_allow_html=True)
 
-st.markdown('<div class="card">', unsafe_allow_html=True)
+st.write("Upload Excel and convert instantly 🚀")
 
-st.write("Upload your Excel file and convert it instantly to CSV format 🚀")
-
-# ------------------ Upload Section ------------------ #
-uploaded_file = st.file_uploader(
-    "📂 Upload Excel File",
-    type=["xlsx", "xls"]
-)
+# ---------------- Upload ---------------- #
+uploaded_file = st.file_uploader("📂 Upload Excel File", type=["xlsx", "xls"])
 
 if uploaded_file is not None:
-    with st.spinner("✨ Reading your file..."):
+    with st.spinner("Reading file..."):
         df = pd.read_excel(uploaded_file)
 
-    st.success("🎉 File uploaded successfully!")
+    st.success("File uploaded successfully 🎉")
 
     col1, col2 = st.columns(2)
+    col1.metric("Rows", df.shape[0])
+    col2.metric("Columns", df.shape[1])
 
-    with col1:
-        st.metric("📊 Total Rows", df.shape[0])
-    with col2:
-        st.metric("📁 Total Columns", df.shape[1])
-
-    if st.toggle("👀 Preview Data"):
+    if st.toggle("Preview data"):
         st.dataframe(df, use_container_width=True)
 
     st.divider()
 
     if st.button("🚀 Convert to CSV"):
-        with st.spinner("🔄 Converting..."):
-            csv = df.to_csv(index=False).encode("utf-8")
+        csv = df.to_csv(index=False).encode("utf-8")
 
-        st.success("✅ Conversion Completed!")
+        st.success("Conversion done ✅")
 
         st.download_button(
-            label="⬇ Download CSV File",
-            data=csv,
-            file_name="converted_file.csv",
-            mime="text/csv"
+            "⬇ Download CSV",
+            csv,
+            "converted_file.csv",
+            "text/csv"
         )
 
 else:
-    st.info("👆 Upload an Excel file to get started.")
-
-st.markdown('</div>', unsafe_allow_html=True)
+    st.info("Upload an Excel file to start ✨")
