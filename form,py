@@ -4,7 +4,7 @@ import pandas as pd
 # ---------------- Page Config ---------------- #
 st.set_page_config(
     page_title="Excel to CSV Converter",
-    page_icon="🌈",
+    page_icon="⚙️",
     layout="centered"
 )
 
