@@ -1,28 +1,80 @@
 import streamlit as st
 import pandas as pd
 
-st.title("Excel → CSV Converter")
-
-# ---- Upload Excel ----
-uploaded_file = st.file_uploader(
-    "Upload Excel file",
-    type=["xlsx", "xls"]
+# ------------------ Page Config ------------------ #
+st.set_page_config(
+    page_title="Excel to CSV Converter",
+    page_icon="📊",
+    layout="centered"
 )
 
+# ------------------ Custom Styling ------------------ #
+st.markdown("""
+    <style>
+        .main-title {
+            font-size:28px !important;
+            font-weight:600;
+            text-align:center;
+            margin-bottom:20px;
+        }
+        .stButton>button {
+            width:100%;
+            border-radius:8px;
+            height:45px;
+            font-size:16px;
+        }
+        .stDownloadButton>button {
+            width:100%;
+            border-radius:8px;
+            height:45px;
+            font-size:16px;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown('<div class="main-title">📊 Excel → CSV Converter</div>', unsafe_allow_html=True)
+
+st.write("Upload your Excel file and convert it instantly to CSV format.")
+
+# ------------------ Upload Section ------------------ #
+with st.container():
+    uploaded_file = st.file_uploader(
+        "Upload Excel File",
+        type=["xlsx", "xls"]
+    )
+
 if uploaded_file is not None:
-    # Read Excel
-    df = pd.read_excel(uploaded_file)
+    with st.spinner("Reading Excel file..."):
+        df = pd.read_excel(uploaded_file)
 
-    st.success("Excel uploaded successfully ✅")
-    st.dataframe(df.head())
+    st.success("File uploaded successfully ✅")
 
-    # ---- Convert button ----
-    if st.button("Convert to CSV"):
-        csv = df.to_csv(index=False).encode("utf-8")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric("Rows", df.shape[0])
+    with col2:
+        st.metric("Columns", df.shape[1])
+
+    # Preview Option
+    if st.toggle("Preview Data"):
+        st.dataframe(df, use_container_width=True)
+
+    st.divider()
+
+    # ------------------ Convert Section ------------------ #
+    if st.button("🚀 Convert to CSV"):
+        with st.spinner("Converting to CSV..."):
+            csv = df.to_csv(index=False).encode("utf-8")
+
+        st.success("Conversion completed 🎉")
 
         st.download_button(
-            label="Download CSV",
+            label="⬇ Download CSV File",
             data=csv,
             file_name="converted_file.csv",
             mime="text/csv"
         )
+
+else:
+    st.info("Please upload an Excel file to begin.")
