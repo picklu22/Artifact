@@ -4,14 +4,6 @@ import os
 
 file = "data/dataset.xlsx"
 
-# ANSI colors
-YELLOW = "\033[93m"
-BLUE = "\033[94m"
-GREEN = "\033[92m"
-RED = "\033[91m"
-CYAN = "\033[96m"
-RESET = "\033[0m"
-
 df = pd.read_excel(file, header=None)
 
 tests = {}
@@ -39,40 +31,12 @@ for index, row in df.iterrows():
 if current_test and data:
     tests[current_test] = pd.DataFrame(data)
 
-report_lines = []
-
 all_test_data = ""
 
 for test, table in tests.items():
-
-    header = f"{YELLOW}========== {test} =========={RESET}"
-    print(header)
-    report_lines.append(header)
-
-    for _, row in table.iterrows():
-
-        row_text = " | ".join([str(x) for x in row])
-
-        if "ONLY_IN_SRC" in row_text:
-            colored_row = f"{RED}{row_text}{RESET}"
-
-        elif "SRC" in row_text:
-            colored_row = f"{BLUE}{row_text}{RESET}"
-
-        elif "TGT" in row_text:
-            colored_row = f"{GREEN}{row_text}{RESET}"
-
-        else:
-            colored_row = row_text
-
-        print(colored_row)
-        report_lines.append(colored_row)
-
     all_test_data += f"\n{test}\n"
     all_test_data += table.to_string(index=False)
 
-
-# -------- Snowflake Connection --------
 
 conn = snowflake.connector.connect(
     user=os.environ['SNOWFLAKE_USER'],
@@ -108,18 +72,10 @@ cursor.execute(query)
 
 result = cursor.fetchone()[0]
 
-summary_header = f"\n{CYAN}========== AI ANALYSIS SUMMARY =========={RESET}\n"
-
-print(summary_header)
-print(result)
-
-report_lines.append(summary_header)
-report_lines.append(result)
-
-# Save colorful report
 with open("analysis_report.txt", "w") as f:
-    for line in report_lines:
-        f.write(line + "\n")
+    f.write(result)
+
+print(result)
 
 cursor.close()
 conn.close()
