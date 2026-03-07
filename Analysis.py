@@ -2,9 +2,9 @@ import pandas as pd
 import snowflake.connector
 import os
 
-file = "data/dataset.xlsx"
+file = "data_comp.xlsx"
 
-df = pd.read_excel(file, header=None)
+df = pd.read_excel(file, sheet_name='mismatch', header=None)
 
 tests = {}
 current_test = None
@@ -39,12 +39,12 @@ for test, table in tests.items():
 
 
 conn = snowflake.connector.connect(
-    user=os.environ['SNOWFLAKE_USER'],
-    password=os.environ['SNOWFLAKE_PASSWORD'],
-    account=os.environ['SNOWFLAKE_ACCOUNT'],
-    warehouse=os.environ['SNOWFLAKE_WAREHOUSE'],
-    database=os.environ['SNOWFLAKE_DATABASE'],
-    schema=os.environ['SNOWFLAKE_SCHEMA']
+    user="monopoly22",
+    password="8638569740picklU",
+    account="JZBSADH-CG45326",
+    warehouse="COMPUTE_WH",
+    database="DBT_POC",
+    schema="DBT_SCHEMA"
 )
 
 cursor = conn.cursor()
